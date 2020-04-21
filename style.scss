@@ -1,0 +1,242 @@
+//Nested
+.child {
+    background: #999;
+    .child-1 {
+        font-size: 12px;
+        .child-2 {
+            color: #fff;
+        }
+    }
+}
+
+//Nested Property
+.text {
+    font: {
+        family: "Arial";
+        size: 1.5em;
+        weight: bold;
+    }
+}
+
+//Parent Selector: & <-- Tuỳ vào vị trí -->
+.box {
+    width: 15px;
+    height: 16px;
+    line-height: 200px;
+    border-radius: 10px // & - .box
+        &-text {
+        font: {
+            family: "Arial";
+            size: 1.5em;
+            weight: bold;
+        }
+        // & - .box-text
+    }
+    &:hover &-text {
+        color: #fff;
+    }
+}
+
+//Variable in SCSS
+$width: 100px;
+.box {
+    background: #000;
+    width: $width;
+}
+
+//Interpolation
+$width: 100px;
+$key: width;
+.box {
+    #{$key}: $width;
+    height: 100px;
+}
+
+//@mixin & @include
+$font: "Arial";
+$bg1: #eee;
+$bg2: #555;
+
+@mixin box($w, $h, $lh, $bg, $br) {
+    width: $w;
+    height: $h;
+    line-height: $lh;
+    background: $bg;
+    border-radius: $br;
+}
+
+.box1 {
+    @include box(700px, 200px, 100px, $bg2, 10px);
+    &-text {
+        text-align: center;
+        font: {
+            family: "Arial";
+            size: 1.5em;
+            weight: bold;
+        }
+    }
+}
+
+.box2 {
+    @include box(500px, 100px, 200px, $bg1, 15px);
+    &-text {
+        text-align: center;
+        font: {
+            family: "Arial";
+            size: 1.5em;
+            weight: bold;
+        }
+    }
+}
+
+//<--placeholder
+$bg: #fff;
+%box {
+    width: 100px;
+    height: 200px;
+    line-height: 100px;
+    background: $bg;
+    border-radius: 10px;
+}
+
+//@extend
+$bg: #fff;
+%box {
+    width: 100px;
+    height: 200px;
+    line-height: 100px;
+    background: $bg;
+    border-radius: 10px;
+}
+
+.box1 {
+    @extend %box; //placeholder
+    &-text {
+        text-align: center;
+        font: {
+            family: "Arial";
+            size: 1.5em;
+            weight: bold;
+        }
+    }
+}
+
+.box2 {
+    @extend .box1; //class
+    &-text {
+        @extend .box1-text;
+    }
+}
+
+//If- else
+$font: "Arial";
+$bg1: #eee;
+$bg2: #555;
+
+@mixin box($w, $h, $lh, $bg, $circle: false) {
+    width: $w;
+    height: $h;
+    line-height: $lh;
+    background: $bg;
+    border-radius: $br;
+    @if $circle == true {
+        border-radius: 50%;
+    } @else {
+        border-radius: $h / 10;
+    }
+}
+
+.box1 {
+    @include box(700px, 200px, 100px, $bg2); //defaut @circle: false
+    &-text {
+        text-align: center;
+        font: {
+            family: "Arial";
+            size: 1.5em;
+            weight: bold;
+        }
+    }
+}
+
+.box2 {
+    @include box(500px, 100px, 200px, $bg1, true);
+    &-text {
+        text-align: center;
+        font: {
+            family: "Arial";
+            size: 1.5em;
+            weight: bold;
+        }
+    }
+}
+
+//List & @each
+%common {
+    background: #555;
+    height: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 5px;
+}
+
+$size: 20, 50, 100;
+
+@each $size in $sizes {
+    //chức năng giống for-of
+    .nav-#{$size} {
+        width: $size * 5px;
+        @extend %common;
+    }
+}
+
+//Map
+$sizes: (
+    20: 20px,
+    50: 50px,
+    100: 100px,
+);
+
+%common {
+    background: #555;
+    height: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 5px;
+}
+
+$size: 20, 50, 100;
+
+@each $key, $value in $sizes {
+    //chức năng giống for-of
+    .nav-#{$key} {
+        width: $value * 5px;
+        @extend %common;
+    }
+}
+
+//@for & @while
+.card {
+    width: 500px;
+    background: #fff;
+    padding: 20px;
+    .content {
+        margin: 10px;
+        padding: 10px;
+    }
+}
+//<-- for -->
+@for $i from 1 through 4 {
+    //through lấy giá trị cuối, to không lấy giá trị cuối
+    .content:nth-child(#{$i}) {
+        opacity: $i * 0.1;
+    }
+}
+
+//<--while-->
+$i: 1;
+@while $i < 5 {
+    .content:nth-child(#{$i}) {
+        opacity: $i * 0.1;
+    }
+    $i: $i + 1; //tránh lặp vô hạn
+}
